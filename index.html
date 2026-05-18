@@ -3,117 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Learn How To Study</title>
+    <title>Free Study Course</title>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Inter', system-ui, sans-serif;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e8f0ff 100%);
+            background: #f5f7fb;
             min-height: 100vh;
-            padding: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
-        
+
         .container {
-            max-width: 480px;
             width: 100%;
+            max-width: 500px;
             background: white;
-            border-radius: 24px;
-            box-shadow: 0 20px 40px -12px rgb(0 0 0 / 0.1);
-            overflow: hidden;
+            border-radius: 20px;
+            padding: 40px 35px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
         }
-        
-        .hero {
-            background: linear-gradient(135deg, #0066ff, #0044cc);
-            color: white;
-            padding: 50px 35px 40px;
-            text-align: center;
-        }
-        
-        h1 {
-            font-size: 2rem;
-            line-height: 1.2;
-            font-weight: 700;
-        }
-        
-        .content {
-            padding: 45px 35px;
-        }
-        
+
         .bullet-points {
-            font-size: 1.35rem;
-            line-height: 1.45;
+            list-style-position: outside;
+            padding-left: 25px;
             margin-bottom: 40px;
         }
-        
+
         .bullet-points li {
-            margin-bottom: 18px;
-            padding-left: 8px;
+            font-size: 1.4rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            color: #111;
+            text-align: left;
         }
-        
+
         .phone {
-            text-align: center;
-            font-size: 1.2rem;
-            margin: 30px 0;
+            font-size: 1.15rem;
+            line-height: 1.6;
+            margin-bottom: 35px;
             color: #222;
+            text-align: left;
         }
-        
+
+        .phone strong {
+            font-weight: 700;
+        }
+
         .cta-button {
             width: 100%;
             background: #0066ff;
             color: white;
-            padding: 22px;
-            font-size: 1.4rem;
-            font-weight: 600;
             border: none;
-            border-radius: 16px;
+            border-radius: 14px;
+            padding: 20px;
+            font-size: 1.25rem;
+            font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 10px 20px -5px rgb(0 102 255 / 0.35);
-            transition: all 0.3s ease;
+            transition: 0.2s ease;
         }
-        
+
         .cta-button:hover {
-            transform: translateY(-3px);
+            transform: translateY(-2px);
+        }
+
+        a {
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <!-- Hero -->
-        <div class="hero">
-            <h1>Page gone blank while reading?<br><br>
-                Given up in the middle of study?<br><br>
-                Not getting the grades you expected?</h1>
+
+        <ul class="bullet-points">
+            <li>Page gone blank while reading?</li>
+            <li>Given up in the middle of study?</li>
+            <li>Not getting the grades you expected?</li>
+        </ul>
+
+        <div class="phone">
+            For questions or help call:<br>
+            <strong>860 - 494 - 5858</strong>
         </div>
 
-        <!-- Content -->
-        <div class="content">
-            <ul class="bullet-points">
-                <li>Page gone blank while reading?</li>
-                <li>Given up in the middle of study?</li>
-                <li>Not getting the grades you expected?</li>
-            </ul>
+        <a href="https://www.scientology.org/courses/study/overview.html" target="_blank">
+            <button class="cta-button">
+                Click here for Free Course
+            </button>
+        </a>
 
-            <div class="phone">
-                For questions or help call:<br>
-                <strong>860-494-5858</strong>
-            </div>
-
-            <a href="https://www.scientology.org/courses/study/overview.html" target="_blank" style="text-decoration: none;">
-                <button class="cta-button">
-                    Click here for Free Course
-                </button>
-            </a>
-        </div>
     </div>
+
 </body>
 </html>
