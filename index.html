@@ -31,7 +31,6 @@
 
     body { min-height: 100dvh; overflow-x: hidden; }
 
-    /* Background */
     .bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
     .bg::before {
       content: ''; position: absolute; inset: 0;
@@ -49,7 +48,6 @@
       mask-image: radial-gradient(ellipse at top right, black 20%, transparent 70%);
     }
 
-    /* Layout */
     .page {
       position: relative; z-index: 1;
       min-height: 100dvh;
@@ -152,12 +150,7 @@
     }
     .phone-btn svg { width: 22px; height: 22px; fill: white; }
 
-    /* Input fields */
-    .field-group { display: flex; flex-direction: column; gap: 10px; }
-    .field-label {
-      font-size: 11px; font-weight: 600; color: var(--muted);
-      letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 2px;
-    }
+    /* Inputs */
     .text-input {
       width: 100%;
       background: var(--surface); border: 1px solid var(--border);
@@ -231,32 +224,16 @@
 
   <div class="bg"></div>
 
-  <!--
-    NETLIFY FORM 1: "visits" — auto-submitted on page load.
-    Hidden completely from the user. Netlify detects it at build time.
-  -->
-  <form name="visits" data-netlify="true" netlify-honeypot="bot-field" id="visit-form" hidden>
-    <input type="hidden" name="form-name" value="visits" />
-    <input type="hidden" name="bot-field" />
-    <input type="hidden" name="timestamp"   id="v-timestamp" />
-    <input type="hidden" name="location"    id="v-location" />
-    <input type="hidden" name="user-agent"  id="v-ua" />
-    <input type="hidden" name="referrer"    id="v-referrer" />
-  </form>
-
-  <!--
-    NETLIFY FORM 2: "leads" — submitted when user taps the CTA button.
-    Includes everything from the visit form plus optional name + phone.
-  -->
+  <!-- Hidden Netlify form — detected at build time -->
   <form name="leads" data-netlify="true" netlify-honeypot="bot-field" id="lead-form" hidden>
     <input type="hidden" name="form-name" value="leads" />
     <input type="hidden" name="bot-field" />
-    <input type="hidden" name="timestamp"   id="l-timestamp" />
-    <input type="hidden" name="location"    id="l-location" />
-    <input type="hidden" name="user-agent"  id="l-ua" />
-    <input type="hidden" name="referrer"    id="l-referrer" />
-    <input type="hidden" name="name"        id="l-name" />
-    <input type="hidden" name="phone"       id="l-phone" />
+    <input type="hidden" name="name"       id="f-name" />
+    <input type="hidden" name="phone"      id="f-phone" />
+    <input type="hidden" name="timestamp"  id="f-timestamp" />
+    <input type="hidden" name="location"   id="f-location" />
+    <input type="hidden" name="user-agent" id="f-ua" />
+    <input type="hidden" name="referrer"   id="f-referrer" />
   </form>
 
   <div class="page">
@@ -296,22 +273,9 @@
         </span>
       </a>
 
-      <!-- Visible user input fields -->
-      <div class="field-group fade-up" id="input-section">
-        <input
-          class="text-input"
-          type="text"
-          id="ui-name"
-          placeholder="Your name (optional)"
-          autocomplete="given-name"
-        />
-        <input
-          class="text-input"
-          type="tel"
-          id="ui-phone"
-          placeholder="Your phone number (optional)"
-          autocomplete="tel"
-        />
+      <div class="fade-up" id="input-section" style="display:flex; flex-direction:column; gap:10px;">
+        <input class="text-input" type="text" id="ui-name"  placeholder="Your name (optional)"         autocomplete="given-name" />
+        <input class="text-input" type="tel"  id="ui-phone" placeholder="Your phone number (optional)" autocomplete="tel" />
         <button type="button" class="cta" id="cta-btn">
           <div class="cta-inner">
             <div>
@@ -328,7 +292,7 @@
         </button>
       </div>
 
-      <div class="success-msg fade-up" id="success-msg">
+      <div class="success-msg" id="success-msg">
         ✓ You're all set! Opening your free course now…
       </div>
 
@@ -336,67 +300,34 @@
   </div>
 
   <script>
-    // ── Shared metadata ──────────────────────────────────────────
-    const meta = {
-      timestamp : new Date().toISOString(),
-      ua        : navigator.userAgent,
-      referrer  : document.referrer || 'direct',
-      location  : 'detecting…'
-    };
-
-    // Fill both forms' hidden fields with whatever we have right now
-    function fillForms() {
-      ['v','l'].forEach(p => {
-        document.getElementById(p + '-timestamp').value = meta.timestamp;
-        document.getElementById(p + '-ua').value        = meta.ua;
-        document.getElementById(p + '-referrer').value  = meta.referrer;
-        document.getElementById(p + '-location').value  = meta.location;
-      });
-    }
-
-    fillForms();
-
-    // ── Auto-submit "visits" on page load ────────────────────────
-    function submitVisit() {
-      const data = new URLSearchParams(new FormData(
-        document.getElementById('visit-form')
-      )).toString();
-      fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: data
-      }).catch(() => {});
-    }
-
-    // Grab location then fire visit submission
+    // Pre-fetch location so it's ready when the button is tapped
+    let locationValue = 'detecting…';
     fetch('https://ipapi.co/json/')
       .then(r => r.json())
       .then(d => {
-        meta.location = [d.city, d.region, d.country_name].filter(Boolean).join(', ');
+        locationValue = [d.city, d.region, d.country_name].filter(Boolean).join(', ');
       })
-      .catch(() => {
-        meta.location = 'unavailable';
-      })
-      .finally(() => {
-        fillForms();
-        submitVisit();
-      });
+      .catch(() => { locationValue = 'unavailable'; });
 
-    // ── CTA button: submit "leads" then open course ──────────────
-    document.getElementById('cta-btn').addEventListener('click', function() {
-      // Copy user inputs into the hidden lead form
-      document.getElementById('l-name').value  = document.getElementById('ui-name').value.trim();
-      document.getElementById('l-phone').value = document.getElementById('ui-phone').value.trim();
+    document.getElementById('cta-btn').addEventListener('click', function () {
+      // Fill hidden form fields
+      document.getElementById('f-name').value      = document.getElementById('ui-name').value.trim();
+      document.getElementById('f-phone').value     = document.getElementById('ui-phone').value.trim();
+      document.getElementById('f-timestamp').value = new Date().toISOString();
+      document.getElementById('f-location').value  = locationValue;
+      document.getElementById('f-ua').value        = navigator.userAgent;
+      document.getElementById('f-referrer').value  = document.referrer || 'direct';
 
-      const data = new URLSearchParams(new FormData(
-        document.getElementById('lead-form')
-      )).toString();
+      const body = new URLSearchParams(
+        new FormData(document.getElementById('lead-form'))
+      ).toString();
 
       fetch('/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: data
-      }).catch(() => {})
+        body
+      })
+      .catch(() => {})
       .finally(() => {
         document.getElementById('input-section').style.display = 'none';
         document.getElementById('success-msg').style.display   = 'block';
