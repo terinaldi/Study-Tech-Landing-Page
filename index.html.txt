@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn How To Study</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        :root { --primary: #0066ff; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e8f0ff 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            max-width: 480px;
+            width: 100%;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.15);
+            overflow: hidden;
+        }
+        .hero {
+            background: linear-gradient(135deg, #0066ff, #0044cc);
+            color: white;
+            padding: 55px 35px 45px;
+            text-align: center;
+        }
+        h1 { font-size: 1.95rem; line-height: 1.15; font-weight: 700; }
+        .content { padding: 40px 30px; }
+        .problem { font-size: 1.38rem; font-weight: 600; text-align: center; margin-bottom: 28px; }
+        .highlight { background: #fff3b0; padding: 2px 6px; border-radius: 4px; }
+
+        input {
+            width: 100%;
+            padding: 15px 16px;
+            margin-bottom: 14px;
+            border: 2px solid #e5e5e5;
+            border-radius: 12px;
+            font-size: 1.05rem;
+        }
+        input:focus { border-color: var(--primary); outline: none; }
+
+        .cta-button {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            padding: 18px;
+            font-size: 1.22rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            margin: 25px 0 15px;
+        }
+        .success { color: #0066ff; text-align: center; font-weight: 600; margin-top: 15px; display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>Page gone blank while reading?<br><br>
+                Given up in the middle of study?<br><br>
+                Not getting the grades you expected?</h1>
+        </div>
+
+        <div class="content">
+            <p class="problem">
+                The problem is that you've never actually learned <span class="highlight">HOW TO STUDY</span>.
+            </p>
+
+            <p style="text-align:center; margin-bottom:25px; font-size:1.2rem;">
+                There are three Barriers to your study and these are them:
+            </p>
+
+            <form id="leadForm">
+                <input type="text" id="name" placeholder="Full Name" required>
+                <input type="tel" id="phone" placeholder="Phone Number" required>
+                <input type="email" id="email" placeholder="Email Address">
+                <input type="text" id="location" placeholder="Where did you scan this?">
+
+                <button type="submit" class="cta-button">
+                    Show Me The 3 Barriers →
+                </button>
+            </form>
+
+            <p style="text-align:center; font-size:0.9rem; color:#666;">
+                Your information stays on this device until you download it.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('leadForm');
+        
+        function downloadCSV(data) {
+            const csvContent = "data:text/csv;charset=utf-8," 
+                + "Date,Name,Phone,Email,Location\n"
+                + data.map(row => `"${row.date}","${row.name}","${row.phone}","${row.email}","${row.location}"`).join("\n");
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `study_leads_${new Date().toISOString().slice(0,10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        let allLeads = JSON.parse(localStorage.getItem('studyLeads')) || [];
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const lead = {
+                date: new Date().toLocaleString(),
+                name: document.getElementById('name').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value || "Not provided",
+                location: document.getElementById('location').value || "Not provided"
+            };
+
+            allLeads.push(lead);
+            localStorage.setItem('studyLeads', JSON.stringify(allLeads));
+
+            // Show success
+            const btn = form.querySelector('button');
+            const originalText = btn.textContent;
+            btn.textContent = "✅ Saved Successfully!";
+            btn.style.background = "#10b981";
+
+            setTimeout(() => {
+                downloadCSV(allLeads);   // Auto download CSV
+                btn.textContent = originalText;
+                btn.style.background = "";
+                form.reset();
+            }, 1200);
+        });
+
+        // Optional: Show how many leads are stored
+        console.log(`Total leads stored: ${allLeads.length}`);
+    </script>
+</body>
+</html>
