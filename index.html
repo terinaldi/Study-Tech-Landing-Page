@@ -7,9 +7,11 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         
-        :root { --primary: #0066ff; }
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         
         body {
             font-family: 'Inter', system-ui, sans-serif;
@@ -33,7 +35,7 @@
         .hero {
             background: linear-gradient(135deg, #0066ff, #0044cc);
             color: white;
-            padding: 60px 35px 50px;
+            padding: 65px 35px 55px;
             text-align: center;
         }
         
@@ -49,9 +51,10 @@
         }
         
         .problem {
-            font-size: 1.4rem;
+            font-size: 1.42rem;
             font-weight: 600;
-            margin-bottom: 30px;
+            margin-bottom: 32px;
+            line-height: 1.3;
         }
         
         .highlight {
@@ -60,127 +63,75 @@
             border-radius: 4px;
         }
         
+        .phone {
+            font-size: 1.15rem;
+            font-weight: 500;
+            color: #1a1a1a;
+            margin: 25px 0;
+        }
+        
         .cta-button {
             width: 100%;
-            background: var(--primary);
+            background: #0066ff;
             color: white;
-            padding: 20px 30px;
-            font-size: 1.35rem;
+            padding: 22px 30px;
+            font-size: 1.4rem;
             font-weight: 600;
             border: none;
             border-radius: 16px;
             cursor: pointer;
-            margin: 30px 0 20px;
-            box-shadow: 0 10px 20px -5px rgb(0 102 255 / 0.4);
-            transition: all 0.3s;
+            box-shadow: 0 12px 25px -5px rgb(0 102 255 / 0.4);
+            transition: all 0.3s ease;
+            margin: 15px 0 30px;
         }
         
         .cta-button:hover {
             transform: translateY(-4px);
-            box-shadow: 0 15px 25px -5px rgb(0 102 255 / 0.5);
+            box-shadow: 0 18px 30px -5px rgb(0 102 255 / 0.5);
         }
         
-        .info {
+        .footer {
             font-size: 0.95rem;
-            color: #666;
-            margin-top: 25px;
+            color: #555;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Hero -->
         <div class="hero">
             <h1>Page gone blank while reading?<br><br>
                 Given up in the middle of study?<br><br>
                 Not getting the grades you expected?</h1>
         </div>
 
+        <!-- Content -->
         <div class="content">
             <p class="problem">
                 The problem is that you've never actually learned <span class="highlight">HOW TO STUDY</span>.
             </p>
             
-            <p style="font-size:1.25rem; margin-bottom: 35px;">
+            <p style="font-size:1.28rem; margin-bottom: 35px;">
                 There are three Barriers to your study and these are them:
             </p>
 
-            <button onclick="trackAndRedirect()" class="cta-button">
-                Show Me The 3 Barriers →
-            </button>
+            <a href="https://www.scientology.org/courses/study/overview.html" 
+               target="_blank">
+                <button class="cta-button">
+                    Click here for Free Course
+                </button>
+            </a>
 
-            <p class="info">
-                Tap the button to discover the solution
+            <div class="phone">
+                For any questions or help call:<br>
+                <strong>860-494-5858</strong>
+            </div>
+
+            <p class="footer">
+                Simple proven methods used by students worldwide
             </p>
         </div>
     </div>
-
-    <script>
-        let visits = JSON.parse(localStorage.getItem('studyVisits')) || [];
-
-        function getBrowserInfo() {
-            return {
-                date: new Date().toLocaleString(),
-                timestamp: new Date().toISOString(),
-                userAgent: navigator.userAgent,
-                language: navigator.language,
-                platform: navigator.platform,
-                screenWidth: window.screen.width,
-                screenHeight: window.screen.height,
-                viewportWidth: window.innerWidth,
-                viewportHeight: window.innerHeight,
-                referrer: document.referrer || "Direct",
-                url: window.location.href
-            };
-        }
-
-        function downloadCSV() {
-            if (visits.length === 0) {
-                alert("No visits recorded yet.");
-                return;
-            }
-
-            let csv = "Date,Time,Device,Browser,Screen Size,Language,Referrer\n";
-            
-            visits.forEach(v => {
-                csv += `"${v.date}","${v.timestamp}","${v.platform}","${v.userAgent.substring(0,100)}","${v.screenWidth}x${v.screenHeight}","${v.language}","${v.referrer}"\n`;
-            });
-
-            const encodedUri = encodeURI("data:text/csv;charset=utf-8," + csv);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `study_page_visits_${new Date().toISOString().slice(0,10)}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        function trackAndRedirect() {
-            const data = getBrowserInfo();
-            visits.push(data);
-            localStorage.setItem('studyVisits', JSON.stringify(visits));
-
-            // Redirect to Scientology page
-            window.location.href = "https://www.scientology.org/courses/study/overview.html";
-        }
-
-        // Show how many visits are stored (for you when you open the page)
-        console.log(`%cTotal visits recorded: ${visits.length}`, 'color: #0066ff; font-size: 14px;');
-        
-        // Optional: Add a small link at bottom for you to download CSV
-        window.onload = () => {
-            if (visits.length > 0) {
-                const downloadLink = document.createElement('a');
-                downloadLink.href = "#";
-                downloadLink.textContent = "📥 Download Visits CSV";
-                downloadLink.style.position = "fixed";
-                downloadLink.style.bottom = "15px";
-                downloadLink.style.left = "50%";
-                downloadLink.style.transform = "translateX(-50%)";
-                downloadLink.style.fontSize = "0.9rem";
-                downloadLink.onclick = (e) => { e.preventDefault(); downloadCSV(); };
-                document.body.appendChild(downloadLink);
-            }
-        };
-    </script>
 </body>
 </html>
