@@ -28,72 +28,61 @@
             width: 100%;
             background: white;
             border-radius: 24px;
-            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.15);
+            box-shadow: 0 20px 40px -12px rgb(0 0 0 / 0.1);
             overflow: hidden;
         }
         
         .hero {
             background: linear-gradient(135deg, #0066ff, #0044cc);
             color: white;
-            padding: 65px 35px 55px;
+            padding: 50px 35px 40px;
             text-align: center;
         }
         
         h1 {
-            font-size: 1.95rem;
-            line-height: 1.15;
+            font-size: 2rem;
+            line-height: 1.2;
             font-weight: 700;
         }
         
         .content {
             padding: 45px 35px;
-            text-align: center;
         }
         
-        .problem {
-            font-size: 1.42rem;
-            font-weight: 600;
-            margin-bottom: 32px;
-            line-height: 1.3;
+        .bullet-points {
+            font-size: 1.35rem;
+            line-height: 1.45;
+            margin-bottom: 40px;
         }
         
-        .highlight {
-            background: #fff3b0;
-            padding: 2px 6px;
-            border-radius: 4px;
+        .bullet-points li {
+            margin-bottom: 18px;
+            padding-left: 8px;
         }
         
         .phone {
-            font-size: 1.15rem;
-            font-weight: 500;
-            color: #1a1a1a;
-            margin: 25px 0;
+            text-align: center;
+            font-size: 1.2rem;
+            margin: 30px 0;
+            color: #222;
         }
         
         .cta-button {
             width: 100%;
             background: #0066ff;
             color: white;
-            padding: 22px 30px;
+            padding: 22px;
             font-size: 1.4rem;
             font-weight: 600;
             border: none;
             border-radius: 16px;
             cursor: pointer;
-            box-shadow: 0 12px 25px -5px rgb(0 102 255 / 0.4);
+            box-shadow: 0 10px 20px -5px rgb(0 102 255 / 0.35);
             transition: all 0.3s ease;
-            margin: 15px 0 30px;
         }
         
         .cta-button:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 18px 30px -5px rgb(0 102 255 / 0.5);
-        }
-        
-        .footer {
-            font-size: 0.95rem;
-            color: #555;
-            margin-top: 20px;
+            transform: translateY(-3px);
         }
     </style>
 </head>
@@ -108,29 +97,22 @@
 
         <!-- Content -->
         <div class="content">
-            <p class="problem">
-                The problem is that you've never actually learned <span class="highlight">HOW TO STUDY</span>.
-            </p>
-            
-            <p style="font-size:1.28rem; margin-bottom: 35px;">
-                There are three Barriers to your study and these are them:
-            </p>
+            <ul class="bullet-points">
+                <li>Page gone blank while reading?</li>
+                <li>Given up in the middle of study?</li>
+                <li>Not getting the grades you expected?</li>
+            </ul>
 
-            <a href="https://www.scientology.org/courses/study/overview.html" 
-               target="_blank">
+            <div class="phone">
+                For questions or help call:<br>
+                <strong>860-494-5858</strong>
+            </div>
+
+            <a href="https://www.scientology.org/courses/study/overview.html" target="_blank" style="text-decoration: none;">
                 <button class="cta-button">
                     Click here for Free Course
                 </button>
             </a>
-
-            <div class="phone">
-                For any questions or help call:<br>
-                <strong>860-494-5858</strong>
-            </div>
-
-            <p class="footer">
-                Simple proven methods used by students worldwide
-            </p>
         </div>
     </div>
 </body>
