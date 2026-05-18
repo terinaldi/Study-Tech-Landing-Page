@@ -1,166 +1,439 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Free Study Course</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Free Study Course</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    :root {
+      --blue: #3b7ff5;
+      --blue-bright: #5b9bff;
+      --blue-glow: rgba(59, 127, 245, 0.35);
+      --dark: #070c16;
+      --dark-mid: #0d1525;
+      --surface: rgba(255,255,255,0.04);
+      --border: rgba(255,255,255,0.08);
+      --text: #f0f4ff;
+      --muted: rgba(200,215,255,0.55);
+    }
 
-        html,
-        body {
-            width: 100%;
-            height: 100%;
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(180deg, #0b1220 0%, #111827 100%);
-            color: white;
-            overflow: hidden;
-        }
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--dark);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
 
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+    body {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
 
-        .container {
-            width: 100%;
-            height: 100vh;
-            padding: 60px 28px 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            background:
-                radial-gradient(circle at top right, rgba(59,130,246,0.35), transparent 30%),
-                radial-gradient(circle at bottom left, rgba(37,99,235,0.25), transparent 35%);
-        }
+    /* ── Background ── */
+    .bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
 
-        .top-section {
-            margin-top: 20px;
-        }
+    .bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 90% 55% at 80% -10%, rgba(59,127,245,0.28) 0%, transparent 65%),
+        radial-gradient(ellipse 70% 50% at -10% 100%, rgba(30,80,200,0.22) 0%, transparent 60%),
+        linear-gradient(175deg, #070c16 0%, #0a1120 45%, #060b14 100%);
+    }
 
-        .bullet-points {
-            list-style: none;
-        }
+    /* Subtle grid texture */
+    .bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: radial-gradient(ellipse at top right, black 20%, transparent 70%);
+    }
 
-        .bullet-points li {
-            position: relative;
-            padding-left: 26px;
-            margin-bottom: 34px;
-            font-size: 2rem;
-            line-height: 1.2;
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            color: #ffffff;
-        }
+    /* ── Layout ── */
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100dvh;
+      padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 52px 28px 44px;
+    }
 
-        .bullet-points li::before {
-            content: "•";
-            position: absolute;
-            left: 0;
-            top: 0;
-            color: #60a5fa;
-            font-size: 2rem;
-        }
+    /* ── Top badge ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(59,127,245,0.12);
+      border: 1px solid rgba(59,127,245,0.3);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--blue-bright);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 36px;
+      width: fit-content;
+    }
 
-        .bottom-section {
-            width: 100%;
-        }
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--blue-bright);
+      box-shadow: 0 0 8px var(--blue-bright);
+      animation: pulse 2s ease-in-out infinite;
+    }
 
-        .phone {
-            font-size: 1.6rem;
-            line-height: 1.35;
-            font-weight: 700;
-            margin-bottom: 28px;
-            color: #dbeafe;
-        }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
 
-        .phone-number {
-            display: block;
-            margin-top: 8px;
-            font-size: 2.2rem;
-            color: #ffffff;
-            font-weight: 800;
-            letter-spacing: -0.04em;
-        }
+    /* ── Headline ── */
+    .headline {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.1rem, 8vw, 2.6rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
 
-        .cta-button {
-            width: 100%;
-            border: none;
-            border-radius: 22px;
-            padding: 24px;
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            color: white;
-            font-size: 1.45rem;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 14px 30px rgba(37,99,235,0.45);
-            transition: transform 0.2s ease;
-        }
+    .headline span {
+      background: linear-gradient(135deg, var(--blue-bright) 0%, #8ab4ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
 
-        .cta-button:active {
-            transform: scale(0.98);
-        }
+    .sub-headline {
+      font-size: 15px;
+      color: var(--muted);
+      font-weight: 400;
+      line-height: 1.5;
+      margin-bottom: 40px;
+    }
 
-        a {
-            text-decoration: none;
-        }
+    /* ── Pain Points ── */
+    .pain-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
 
-        @media (max-width: 430px) {
-            .bullet-points li {
-                font-size: 1.8rem;
-            }
+    .pain-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 20px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
 
-            .phone {
-                font-size: 1.45rem;
-            }
+    .pain-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(91,155,255,0.4), transparent);
+    }
 
-            .phone-number {
-                font-size: 2rem;
-            }
-        }
-    </style>
+    .pain-icon {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      background: rgba(59,127,245,0.15);
+      border: 1px solid rgba(59,127,245,0.25);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      margin-top: 1px;
+    }
+
+    .pain-text {
+      font-size: 17px;
+      font-weight: 600;
+      line-height: 1.3;
+      color: rgba(230,238,255,0.92);
+      letter-spacing: -0.01em;
+    }
+
+    /* ── Bottom Section ── */
+    .bottom {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* ── Phone Card ── */
+    .phone-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .phone-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at left, rgba(59,127,245,0.07), transparent 70%);
+      pointer-events: none;
+    }
+
+    .phone-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .phone-number {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+    }
+
+    .phone-btn {
+      flex-shrink: 0;
+      width: 46px;
+      height: 46px;
+      background: linear-gradient(135deg, var(--blue) 0%, #2563eb 100%);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 20px rgba(37,99,235,0.45);
+      text-decoration: none;
+    }
+
+    .phone-btn svg {
+      width: 22px;
+      height: 22px;
+      fill: white;
+    }
+
+    /* ── CTA Button ── */
+    .cta {
+      display: block;
+      width: 100%;
+      padding: 20px 24px;
+      background: linear-gradient(135deg, var(--blue) 0%, #1d4fd8 100%);
+      color: #ffffff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      text-align: center;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      box-shadow:
+        0 16px 40px rgba(29,79,216,0.45),
+        0 0 0 1px rgba(91,155,255,0.2) inset,
+        0 1px 0 rgba(255,255,255,0.2) inset;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .cta::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 200%; }
+    }
+
+    .cta:active {
+      transform: scale(0.97);
+      box-shadow: 0 8px 20px rgba(29,79,216,0.35);
+    }
+
+    .cta-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .cta-arrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      background: rgba(255,255,255,0.18);
+      border-radius: 8px;
+    }
+
+    .cta-arrow svg {
+      width: 14px;
+      height: 14px;
+      stroke: white;
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .cta-sub {
+      display: block;
+      font-size: 12px;
+      font-weight: 400;
+      opacity: 0.72;
+      margin-top: 3px;
+      letter-spacing: 0;
+    }
+
+    /* ── Fade-in animations ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(18px);
+      animation: fadeUp 0.55s ease forwards;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-up:nth-child(1) { animation-delay: 0.05s; }
+    .fade-up:nth-child(2) { animation-delay: 0.15s; }
+    .fade-up:nth-child(3) { animation-delay: 0.25s; }
+    .fade-up:nth-child(4) { animation-delay: 0.35s; }
+    .fade-up:nth-child(5) { animation-delay: 0.45s; }
+    .fade-up:nth-child(6) { animation-delay: 0.55s; }
+  </style>
 </head>
-
 <body>
 
-    <div class="container">
+  <div class="bg"></div>
 
-        <div class="top-section">
-            <ul class="bullet-points">
-                <li>Page gone blank while reading?</li>
-                <li>Given up in the middle of study?</li>
-                <li>Not getting the grades you expected?</li>
-            </ul>
-        </div>
+  <div class="page">
 
-        <div class="bottom-section">
+    <div class="top-section">
 
-            <div class="phone">
-                For questions or help call:
-                <span class="phone-number">860 - 494 - 5858</span>
-            </div>
+      <div class="badge fade-up">
+        <span class="badge-dot"></span>
+        Free Course Available
+      </div>
 
-            <a
-                href="https://www.scientology.org/courses/study/overview.html"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                <button class="cta-button">
-                    Click here for Free Course
-                </button>
-            </a>
+      <h1 class="headline fade-up">
+        Struggling<br>to <span>study</span>?
+      </h1>
+      <p class="sub-headline fade-up">You're not alone. These are the most common barriers students face.</p>
 
-        </div>
+      <ul class="pain-list">
+        <li class="pain-item fade-up">
+          <span class="pain-icon">📖</span>
+          <span class="pain-text">Page gone blank while reading?</span>
+        </li>
+        <li class="pain-item fade-up">
+          <span class="pain-icon">🧠</span>
+          <span class="pain-text">Given up in the middle of study?</span>
+        </li>
+        <li class="pain-item fade-up">
+          <span class="pain-icon">📉</span>
+          <span class="pain-text">Not getting the grades you expected?</span>
+        </li>
+      </ul>
 
     </div>
+
+    <div class="bottom">
+
+      <a href="tel:8604945858" class="phone-card fade-up" style="text-decoration:none; color:inherit;">
+        <div>
+          <p class="phone-label">Questions or help</p>
+          <p class="phone-number">860 · 494 · 5858</p>
+        </div>
+        <span class="phone-btn" aria-label="Call us">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/>
+          </svg>
+        </span>
+      </a>
+
+      <a
+        href="https://www.scientology.org/courses/study/overview.html"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="cta fade-up"
+      >
+        <div class="cta-inner">
+          <div>
+            <span>Get Your Free Course</span>
+            <span class="cta-sub">No cost · Start immediately</span>
+          </div>
+          <span class="cta-arrow">
+            <svg viewBox="0 0 16 16">
+              <polyline points="3,8 13,8"/>
+              <polyline points="9,4 13,8 9,12"/>
+            </svg>
+          </span>
+        </div>
+      </a>
+
+    </div>
+
+  </div>
 
 </body>
 </html>
