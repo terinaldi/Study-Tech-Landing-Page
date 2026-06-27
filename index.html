@@ -357,16 +357,11 @@
       const phoneDigits = phone.replace(/\D/g, '');
       let valid         = true;
 
-      if (!name)               { setInvalid(nameInput,  errName);  valid = false; }
+      if (!name)                  { setInvalid(nameInput,  errName);  valid = false; }
       if (phoneDigits.length < 7) { setInvalid(phoneInput, errPhone); valid = false; }
       if (!valid) return;
 
-      // ── Open the course page IMMEDIATELY, still inside the click handler.
-      // This is the only moment browsers guarantee window.open works without
-      // being blocked as a popup — any async delay kills it on mobile.
-      window.location.href = COURSE_URL;
-
-      // ── Fire-and-forget: submit lead data in the background.
+      // Fill hidden form fields
       document.getElementById('f-name').value      = name;
       document.getElementById('f-phone').value     = phone;
       document.getElementById('f-timestamp').value = new Date().toISOString();
@@ -374,18 +369,19 @@
       document.getElementById('f-ua').value        = navigator.userAgent;
       document.getElementById('f-referrer').value  = document.referrer || 'direct';
 
-      navigator.sendBeacon
-        ? navigator.sendBeacon('/', new URLSearchParams(
-            new FormData(document.getElementById('lead-form'))
-          ).toString())
-        : fetch('/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams(
-              new FormData(document.getElementById('lead-form'))
-            ).toString(),
-            keepalive: true
-          }).catch(() => {});
+      // Submit to Netlify using fetch with keepalive — works reliably across all browsers.
+      // keepalive:true lets the request complete even after page navigation.
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(
+          new FormData(document.getElementById('lead-form'))
+        ).toString(),
+        keepalive: true
+      }).catch(() => {});
+
+      // Redirect after submission is queued
+      window.location.href = COURSE_URL;
     });
   </script>
 
